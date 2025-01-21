@@ -42,10 +42,10 @@
         <button id="to-gas" style="display: none;">Convert to Gas</button>
         <button id="to-solid" style="display: none;">Convert to Solid</button>
         <button id="delete-matter" style="display: none;">Delete Matter</button>
+        <button id="save-matter" style="display: none;">Save Matter State</button>
     </div>
     <p>Refreshing the browser will not make it forget the state.</p>
-<p>To access local storage, right-click on the page, select "Inspect" (or press F12), go to the "Application" tab, and look under "Storage" > "Local Storage" to view or modify saved data.</p>
-
+    <p>To access local storage, right-click on the page, select "Inspect" (or press F12), go to the "Application" tab, and look under "Storage" > "Local Storage" to view or modify saved data.</p>
 
     <script>
         // Retrieve state from local storage or set default to null
@@ -57,6 +57,7 @@
         const toLiquidButton = document.getElementById('to-liquid');
         const toGasButton = document.getElementById('to-gas');
         const toSolidButton = document.getElementById('to-solid');
+        const saveButton = document.getElementById('save-matter');
 
         // Initialize display on load
         function initialize() {
@@ -67,6 +68,7 @@
                 toGasButton.style.display = 'inline';
                 toSolidButton.style.display = 'inline';
                 deleteButton.style.display = 'inline';
+                saveButton.style.display = 'inline';
                 stateDisplay.textContent = state;
             } else {
                 stateContainer.style.display = 'none';
@@ -75,6 +77,7 @@
                 toGasButton.style.display = 'none';
                 toSolidButton.style.display = 'none';
                 deleteButton.style.display = 'none';
+                saveButton.style.display = 'none';
             }
         }
 
@@ -125,6 +128,23 @@
                 updateDisplay();
             } else {
                 alert('State cannot be changed as Solid is the final state.');
+            }
+        });
+
+        // Save the state of matter to a file
+        saveButton.addEventListener('click', () => {
+            if (state) {
+                const matterData = {
+                    state: state
+                };
+
+                const blob = new Blob([JSON.stringify(matterData)], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'matterState.json';
+                link.click();
+            } else {
+                alert('No matter state to save.');
             }
         });
 
