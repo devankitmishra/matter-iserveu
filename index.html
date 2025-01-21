@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State of Matter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            margin-top: 15em;
+        }
+        .state {
+            font-size: 1.5em;
+            margin: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        #to-liquid:hover{
+            background-color: aqua;
+        }
+        #to-gas:hover{
+            background-color: lightgreen;
+        }
+        #to-solid:hover{
+            background-color:blue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manage the State of Matter</h1>
+    <div class="state" id="state-container" style="display: none;">Current State: <span id="current-state">Gas</span></div>
+    <div>
+        <button id="create-matter">Create Matter</button>
+        <button id="to-liquid" style="display: none;">Convert to Liquid</button>
+        <button id="to-gas" style="display: none;">Convert to Gas</button>
+        <button id="to-solid" style="display: none;">Convert to Solid</button>
+        <button id="delete-matter" style="display: none;">Delete Matter</button>
+    </div>
+    <p>Refreshing the browser will not make it forget the state.</p>
+<p>To access local storage, right-click on the page, select "Inspect" (or press F12), go to the "Application" tab, and look under "Storage" > "Local Storage" to view or modify saved data.</p>
+
+
+    <script>
+        // Retrieve state from local storage or set default to null
+        let state = localStorage.getItem('matterState');
+        const stateDisplay = document.getElementById('current-state');
+        const stateContainer = document.getElementById('state-container');
+        const createButton = document.getElementById('create-matter');
+        const deleteButton = document.getElementById('delete-matter');
+        const toLiquidButton = document.getElementById('to-liquid');
+        const toGasButton = document.getElementById('to-gas');
+        const toSolidButton = document.getElementById('to-solid');
+
+        // Initialize display on load
+        function initialize() {
+            if (state) {
+                stateContainer.style.display = 'block';
+                createButton.style.display = 'none';
+                toLiquidButton.style.display = 'inline';
+                toGasButton.style.display = 'inline';
+                toSolidButton.style.display = 'inline';
+                deleteButton.style.display = 'inline';
+                stateDisplay.textContent = state;
+            } else {
+                stateContainer.style.display = 'none';
+                createButton.style.display = 'inline';
+                toLiquidButton.style.display = 'none';
+                toGasButton.style.display = 'none';
+                toSolidButton.style.display = 'none';
+                deleteButton.style.display = 'none';
+            }
+        }
+
+        // Update the display
+        function updateDisplay() {
+            stateDisplay.textContent = state;
+        }
+
+        // Create matter
+        createButton.addEventListener('click', () => {
+            state = 'Gas';
+            localStorage.setItem('matterState', state);
+            initialize();
+        });
+
+        // Delete matter
+        deleteButton.addEventListener('click', () => {
+            state = null;
+            localStorage.removeItem('matterState');
+            initialize();
+        });
+
+        // Change state functions
+        toLiquidButton.addEventListener('click', () => {
+            if (state === 'Gas') {
+                state = 'Liquid';
+                localStorage.setItem('matterState', state);
+                updateDisplay();
+            } else {
+                alert('State cannot be changed to Liquid from the current state.');
+            }
+        });
+
+        toGasButton.addEventListener('click', () => {
+            if (state === 'Liquid') {
+                state = 'Gas';
+                localStorage.setItem('matterState', state);
+                updateDisplay();
+            } else {
+                alert('State cannot be changed to Gas from the current state.');
+            }
+        });
+
+        toSolidButton.addEventListener('click', () => {
+            if (state === 'Gas' || state === 'Liquid') {
+                state = 'Solid';
+                localStorage.setItem('matterState', state);
+                updateDisplay();
+            } else {
+                alert('State cannot be changed as Solid is the final state.');
+            }
+        });
+
+        // Initialize the app
+        initialize();
+    </script>
+</body>
+</html>
